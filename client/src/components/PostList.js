@@ -1,43 +1,40 @@
 import React from 'react';
-import { Card, Image } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import { getPosts } from '../actions/posts';
+import { Card, Dimmer, Loader } from 'semantic-ui-react';
 import axios from 'axios';
+import Post from './Post'
 import { setHeaders } from '../actions/headers';
 import { connect } from 'react-redux';
+// eslint-disable-next-line
+import { getPosts } from '../actions/posts';
+
 
 class PostList extends React.Component {
   state = { posts: [] }
 
   componentDidMount() {
+    console.log('did mount');
     axios.get('/api/posts/')
       .then( res => {
         this.props.dispatch(setHeaders(res.headers))
         this.setState({ posts: res.data })
+        console.log(res.data);
       })
   }
 
   render() {
-    return(
-      <Card.Group itemsPerRow={2}>
-        { this.state.posts.map( post =>
-        <Card>
-          <Image src={post.image} />
-          <Card.Content>
-            <Card.Header>
-              {post.title}
-            </Card.Header>
-            <Card.Description>
-              {post.body}
-            </Card.Description>
-          </Card.Content>
-          <Card.Content extra>
-            <Link to={`/api/posts/${post.id}`}>Show Post</Link>
-          </Card.Content>
-        </Card>
-        )}
-      </Card.Group>
-    )
+    if (this.state.posts === []){
+      <Dimmer active>
+        <Loader>Loading</Loader>
+      </Dimmer>
+    } else {
+      return(
+        <Card.Group itemsPerRow={2}>
+          { this.state.posts.map( (post, i) =>
+            <Post {...this.props} key={i} i={i} post={post} />
+          )}
+        </Card.Group>
+      )
+    }
   }
 }
 
