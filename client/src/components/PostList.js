@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Dimmer, Loader } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import axios from 'axios';
 import Post from './Post'
 import { setHeaders } from '../actions/headers';
@@ -22,11 +22,6 @@ class PostList extends React.Component {
   }
 
   render() {
-    if (this.state.posts === []){
-      <Dimmer active>
-        <Loader>Loading</Loader>
-      </Dimmer>
-    } else {
       return(
         <Card.Group itemsPerRow={2}>
           { this.state.posts.map( (post, i) =>
@@ -34,7 +29,6 @@ class PostList extends React.Component {
           )}
         </Card.Group>
       )
-    }
   }
 }
 
